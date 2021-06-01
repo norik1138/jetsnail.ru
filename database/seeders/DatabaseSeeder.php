@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Driver;
+use App\Models\Transport;
+use App\Models\TransportKind;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+      Driver::factory(30)->create();
+      Transport::factory(30)->create();
+      TransportKind::factory(4)->create();
+      User::factory(5)->create();
     }
 }

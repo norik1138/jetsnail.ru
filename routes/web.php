@@ -1,18 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+// use App\Http\Controllers\UsersController;
+use App\Http\Controllers\DriversController;
+// use App\Http\Controllers\TransportController;
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\Auth\LoginController;
+// use App\Http\Controllers\HomeController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes([
+  'reset' => false,
+  'confirm' => false,
+  'verify' => false
+]);
+
+Route::get('/', [MainController::class, 'index'])->name('index');
+
+Route::get('/logout', [LoginController::class, 'logout'])->name('get-logout');
+
+Route::get('/home', function() {
+  // return view('auth.transports.home');
+  return view('app');
 });
+
+
+
+Route::group(['middleware' => 'auth'], function() {
+  Route::group(['middleware' => 'is_admin'], function() {
+    Route::resource('drivers', DriversController::class);
+    Route::post('drivers/{driverId}/{transportId}', [DriversController::class, 'deleteRelation'])->name('drivers.deleteRelation');
+    Route::get('/transports', function() {
+      return view('auth.transports.app');
+    })->name('transports');
+  });
+});
+
+
+
+// Route::fallback(function() {
+//   return view('app');
+// });
